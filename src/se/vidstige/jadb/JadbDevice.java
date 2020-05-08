@@ -131,10 +131,17 @@ public class JadbDevice {
         send(transport, "exec:" + shellLine.toString());
         return new BufferedInputStream(transport.getInputStream());
     }
-    
+    /** Execute a reverse port forwarding. This allows the device to reach host services.
+     * 
+     * @param port1 The device port
+     * @param port2 The host port
+     * @return combined stdout/stderr stream.
+     * @throws IOException
+     * @throws JadbException
+     */
     public InputStream reverse(int port1, int port2) throws IOException, JadbException {
         Transport transport = getTransport();
-        send(transport, "forward:norebind:tcp:" + port1 +";tpc:"+port2);
+        send(transport, "reverse:forward:norebind:tcp:"+ port1 +";tcp:"+port2);
         return new AdbFilterInputStream(new BufferedInputStream(transport.getInputStream()));
     }
 
