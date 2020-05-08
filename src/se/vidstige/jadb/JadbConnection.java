@@ -80,4 +80,48 @@ public class JadbConnection implements ITransportFactory {
     public JadbDevice getAnyDevice() {
         return JadbDevice.createAny(this);
     }
+    
+    public String listforward(String serial) throws IOException, JadbException {
+        Transport devices = createTransport();
+        devices.send("host-serial:" + serial + ":list-forward");
+        devices.verifyResponse();
+        String body = devices.readString();
+        devices.close();
+        return body;
+    }
+    
+    public void forward(String serial, int port1, int port2) throws IOException, JadbException {
+        Transport devices = createTransport();
+        devices.send("host-serial:" + serial + ":list-forward");
+        devices.verifyResponse();
+        String body = devices.readString();
+        devices.close();
+        System.out.println(body);
+        devices = createTransport();
+        devices.send("host-serial:" + serial + ":forward:tcp:" + port1 + ";tcp:" + port2);
+        devices.verifyResponse();
+        devices.close();
+    }
+    
+    public String listreverse(String serial) throws IOException, JadbException {
+        Transport devices = createTransport();
+        devices.send("host-serial:" + serial + ":list-reverse");
+        devices.verifyResponse();
+        String body = devices.readString();
+        devices.close();
+        return body;
+    }
+    
+    public void reverse(String serial, int port1, int port2) throws IOException, JadbException {
+        Transport devices = createTransport();
+        devices.send("host-serial:" + serial + ":list-reverse");
+        devices.verifyResponse();
+        String body = devices.readString();
+        devices.close();
+        System.out.println(body);
+        devices = createTransport();
+        devices.send("host-serial:" + serial + ":reverse:tcp:" + port1 + ";tcp:" + port2);
+        devices.verifyResponse();
+        devices.close();
+    }
 }
