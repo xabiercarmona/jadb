@@ -131,6 +131,12 @@ public class JadbDevice {
         send(transport, "exec:" + shellLine.toString());
         return new BufferedInputStream(transport.getInputStream());
     }
+    
+    public InputStream reverse(int port1, int port2) throws IOException, JadbException {
+        Transport transport = getTransport();
+        send(transport, "forward:norebind:tcp:" + port1 +";tpc:"+port2);
+        return new AdbFilterInputStream(new BufferedInputStream(transport.getInputStream()));
+    }
 
     /**
      * Builds a command line string from the command and its arguments.
