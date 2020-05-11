@@ -144,6 +144,15 @@ public class JadbDevice {
         send(transport, "reverse:forward:norebind:tcp:"+ port1 +";tcp:"+port2);
         return new AdbFilterInputStream(new BufferedInputStream(transport.getInputStream()));
     }
+    
+    public String listreverse() throws IOException, JadbException			{
+    	Transport transport = getTransport();
+    	transport.send("reverse:list-forward");
+    	transport.verifyResponse();
+    	String body = transport.readString();
+    	transport.close();
+    	return body;    	
+    }
 
     /**
      * Builds a command line string from the command and its arguments.
